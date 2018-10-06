@@ -66,8 +66,13 @@ use Cake\Utility\Security;
  * that changes from configuration that does not. This makes deployment simpler.
  */
 try {
+    Configure::write('CAKEPHP_DEBUG', getenv('CAKEPHP_DEBUG'));
+    
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+    if (Configure::read('CAKEPHP_DEBUG') == 2) {
+        Configure::load('appserver', 'default', true);
+    }
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -197,3 +202,9 @@ Type::build('timestamp')
 //Inflector::rules('irregular', ['red' => 'redlings']);
 //Inflector::rules('uninflected', ['dontinflectme']);
 //Inflector::rules('transliteration', ['/å/' => 'aa']);
+
+Plugin::load('Cors', ['bootstrap' => true, 'routes' => false]);
+Plugin::load('ADmad/JwtAuth');
+Plugin::load('Burzum/Imagine');
+
+Configure::write('Imagine.salt', 'proagrocorp123456');
