@@ -14,10 +14,6 @@
  */
 namespace App\Console;
 
-if (!defined('STDIN')) {
-    define('STDIN', fopen('php://stdin', 'r'));
-}
-
 use Cake\Utility\Security;
 use Composer\Script\Event;
 use Exception;
@@ -28,20 +24,6 @@ use Exception;
  */
 class Installer
 {
-
-    /**
-     * An array of directories to be made writable
-     */
-    const WRITABLE_DIRS = [
-        'logs',
-        'tmp',
-        'tmp/cache',
-        'tmp/cache/models',
-        'tmp/cache/persistent',
-        'tmp/cache/views',
-        'tmp/sessions',
-        'tmp/tests'
-    ];
 
     /**
      * Does some routine installation tasks so people don't have to.
@@ -83,9 +65,8 @@ class Installer
 
         static::setSecuritySalt($rootDir, $io);
 
-        $class = 'Cake\Codeception\Console\Installer';
-        if (class_exists($class)) {
-            $class::customizeCodeceptionBinary($event);
+        if (class_exists('\Cake\Codeception\Console\Installer')) {
+            \Cake\Codeception\Console\Installer::customizeCodeceptionBinary($event);
         }
     }
 
@@ -115,7 +96,18 @@ class Installer
      */
     public static function createWritableDirectories($dir, $io)
     {
-        foreach (static::WRITABLE_DIRS as $path) {
+        $paths = [
+            'logs',
+            'tmp',
+            'tmp/cache',
+            'tmp/cache/models',
+            'tmp/cache/persistent',
+            'tmp/cache/views',
+            'tmp/sessions',
+            'tmp/tests'
+        ];
+
+        foreach ($paths as $path) {
             $path = $dir . '/' . $path;
             if (!file_exists($path)) {
                 mkdir($path);
@@ -136,14 +128,14 @@ class Installer
     public static function setFolderPermissions($dir, $io)
     {
         // Change the permissions on a path and output the results.
-        $changePerms = function ($path) use ($io) {
+        $changePerms = function ($path, $perms, $io) {
+            // Get permission bits from stat(2) result.
             $currentPerms = fileperms($path) & 0777;
-            $worldWritable = $currentPerms | 0007;
-            if ($worldWritable == $currentPerms) {
+            if (($currentPerms & $perms) == $perms) {
                 return;
             }
 
-            $res = chmod($path, $worldWritable);
+            $res = chmod($path, $currentPerms | $perms);
             if ($res) {
                 $io->write('Permissions set on ' . $path);
             } else {
@@ -151,7 +143,7 @@ class Installer
             }
         };
 
-        $walker = function ($dir) use (&$walker, $changePerms) {
+        $walker = function ($dir, $perms, $io) use (&$walker, $changePerms) {
             $files = array_diff(scandir($dir), ['.', '..']);
             foreach ($files as $file) {
                 $path = $dir . '/' . $file;
@@ -160,14 +152,15 @@ class Installer
                     continue;
                 }
 
-                $changePerms($path);
-                $walker($path);
+                $changePerms($path, $perms, $io);
+                $walker($path, $perms, $io);
             }
         };
 
-        $walker($dir . '/tmp');
-        $changePerms($dir . '/tmp');
-        $changePerms($dir . '/logs');
+        $worldWritable = bindec('0000000111');
+        $walker($dir . '/tmp', $worldWritable, $io);
+        $changePerms($dir . '/tmp', $worldWritable, $io);
+        $changePerms($dir . '/logs', $worldWritable, $io);
     }
 
     /**

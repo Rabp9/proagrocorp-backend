@@ -40,9 +40,6 @@ use Cake\Routing\Route\DashedRoute;
  * inconsistently cased URLs when used with `:plugin`, `:controller` and
  * `:action` markers.
  *
- * Cache: Routes are cached to improve performance, check the RoutingMiddleware
- * constructor in your `src/Application.php` file to change this behavior.
- *
  */
 Router::defaultRouteClass(DashedRoute::class);
 
@@ -78,35 +75,42 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks('DashedRoute');
 });
 
+/**
+ * Load all plugin routes. See the Plugin documentation on
+ * how to customize the loading of plugin routes.
+ */
+/**
+ * Load all plugin routes. See the Plugin documentation on
+ * how to customize the loading of plugin routes.
+ */
 Router::scope('/', function ($routes) {
-    $routes->setExtensions(['json']);
+    $routes->extensions(['json']);
     
     $routes->resources('Infos', [
         'map' => [
-            /*'saveMany' => [
-                'action' => 'saveMany',
-                'method' => 'POST'
-            ],*/
-            /*'getData/:data' => [
-                'action' => 'getData',
-                'method' => 'GET'
-            ],*/
             'getMany' => [
                 'action' => 'getMany',
                 'method' => 'POST'
             ],
-            /*'getDataByData' => [
-                'action' => 'getDataByData',
-                'method' => 'POST'
-            ],*/
-            /*'upload' => [
-                'action' => 'upload',
-                'method' => 'POST'
-            ]*/
+            'indexAdmin' => [
+                'action' => 'indexAdmin',
+                'method' => 'GET'
+            ]
         ]
     ]);
-    /*
-    $routes->resources('Cabeceras', [ 
+    $routes->resources('links', [
+        'map' => [
+            'getHeader' => [
+                'action' => 'getHeader',
+                'method' => 'GET'
+            ],
+            'getFooter' => [
+                'action' => 'getFooter',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
+/*    $routes->resources('Cabeceras', [
         'map' => [
             'saveMany' => [
                 'action' => 'saveMany',
@@ -242,6 +246,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Controllers');
-    */
+    $routes->resources('Controllers');*/
 });
+
+Plugin::routes();

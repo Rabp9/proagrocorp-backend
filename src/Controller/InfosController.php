@@ -14,13 +14,13 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getMany']);
+        $this->Auth->allow(['getMany', 'indexAdmin']);
     }
     
     /**
      * GetMany method
      *
-     * @param string|null $infos.
+     * @param string|null $descripciones.
      * @return \Cake\Network\Response|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
@@ -46,11 +46,11 @@ class InfosController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
-        $infos = $this->paginate($this->Infos);
+    public function indexAdmin() {
+        $infos = $this->Infos->find();
 
         $this->set(compact('infos'));
+        $this->set('_serialize', 'infos');
     }
 
     /**

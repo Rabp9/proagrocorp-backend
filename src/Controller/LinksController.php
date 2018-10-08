@@ -12,20 +12,38 @@ use App\Controller\AppController;
  */
 class LinksController extends AppController
 {
+    public function initialize() {
+        parent::initialize();
+        $this->Auth->allow(['getHeader', 'getFooter']);
+    }
+    
 
     /**
      * Index method
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Estados']
-        ];
-        $links = $this->paginate($this->Links);
+    public function index() {
+        $links = $this->Links->find();
 
         $this->set(compact('links'));
+        $this->set('_serialize', 'links');
+    }
+
+    public function getHeader() {
+        $linksHeader = $this->Links->find()
+            ->where(["estado_id" => 1, "ubicacion" => "header"]);
+
+        $this->set(compact('linksHeader'));
+        $this->set('_serialize', 'linksHeader');
+    }
+
+    public function getFooter() {
+        $linksFooter = $this->Links->find()
+            ->where(["estado_id" => 1, "ubicacion" => "footer"]);
+
+        $this->set(compact('linksFooter'));
+        $this->set('_serialize', 'linksFooter');
     }
 
     /**
