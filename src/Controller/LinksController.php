@@ -35,7 +35,7 @@ class LinksController extends AppController
             ->where(["estado_id" => 1, "ubicacion" => "header"]);
 
         $this->set(compact('linksHeader'));
-        $this->set('_serialize', 'linksHeader');
+        $this->set('_serialize', ['linksHeader']);
     }
 
     public function getFooter() {
@@ -43,7 +43,7 @@ class LinksController extends AppController
             ->where(["estado_id" => 1, "ubicacion" => "footer"]);
 
         $this->set(compact('linksFooter'));
-        $this->set('_serialize', 'linksFooter');
+        $this->set('_serialize', ['linksFooter']);
     }
 
     /**
