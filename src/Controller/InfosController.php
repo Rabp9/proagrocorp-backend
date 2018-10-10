@@ -50,7 +50,7 @@ class InfosController extends AppController
         $infos = $this->Infos->find();
 
         $this->set(compact('infos'));
-        $this->set('_serialize', 'infos');
+        $this->set('_serialize', ['infos']);
     }
 
     /**

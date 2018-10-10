@@ -110,6 +110,7 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
+    $routes->resources('Categories');
 /*    $routes->resources('Cabeceras', [
         'map' => [
             'saveMany' => [

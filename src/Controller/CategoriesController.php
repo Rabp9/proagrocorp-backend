@@ -12,22 +12,23 @@ use App\Controller\AppController;
  */
 class CategoriesController extends AppController
 {
-
+    public function initialize() {
+        parent::initialize();
+        $this->Auth->allow(['index']);
+    }
+    
     /**
      * Index method
      *
      * @return \Cake\Http\Response|void
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Categories', 'Estados']
-        ];
-        $categories = $this->paginate($this->Categories);
+    public function index() {
+        $categories = $this->Categories->find();
 
         $this->set(compact('categories'));
+        $this->set('_serialize', ['categories']);
     }
-
+    
     /**
      * View method
      *
