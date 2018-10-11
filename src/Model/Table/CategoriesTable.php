@@ -36,6 +36,7 @@ class CategoriesTable extends Table
         $this->setTable('categories');
         $this->setDisplayField('id');
         $this->setPrimaryKey(['id', 'category_id', 'estado_id']);
+        $this->addBehavior('Tree');
 
         $this->belongsTo('Categories', [
             'foreignKey' => 'category_id',

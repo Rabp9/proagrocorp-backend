@@ -23,8 +23,11 @@ class CategoriesController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $categories = $this->Categories->find();
-
+        $this->Categories->recover();
+//        $categories = $this->Categories->find();
+        $categories = $this->Categories->find('children', ['for' => 1])
+            ->find('threaded')
+            ->toArray();
         $this->set(compact('categories'));
         $this->set('_serialize', ['categories']);
     }
