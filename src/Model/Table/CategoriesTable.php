@@ -35,13 +35,19 @@ class CategoriesTable extends Table
 
         $this->setTable('categories');
         $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'category_id', 'estado_id']);
+        $this->setPrimaryKey('id');
         $this->addBehavior('Tree');
 
-        $this->belongsTo('Categories', [
-            'foreignKey' => 'category_id',
-            'joinType' => 'INNER'
-        ]);
+        $this->hasMany('Child1Categories', [
+            'className' => 'Categories',
+            'foreignKey' => 'parent_id'
+        ])->setProperty('child1Categories');
+        
+        $this->hasMany('Child2Categories', [
+            'className' => 'Categories',
+            'foreignKey' => 'parent_id'
+        ])->setProperty('child2Categories');
+        
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'

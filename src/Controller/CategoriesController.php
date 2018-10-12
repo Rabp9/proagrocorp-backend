@@ -24,10 +24,11 @@ class CategoriesController extends AppController
      */
     public function index() {
         $this->Categories->recover();
-//        $categories = $this->Categories->find();
-        $categories = $this->Categories->find('children', ['for' => 1])
-            ->find('threaded')
-            ->toArray();
+        
+        $categories = $this->Categories->find()
+            ->contain(['Child1Categories' => ['Child2Categories']])
+            ->where(['parent_id IS' => null, 'estado_id' => 1]);
+        
         $this->set(compact('categories'));
         $this->set('_serialize', ['categories']);
     }
