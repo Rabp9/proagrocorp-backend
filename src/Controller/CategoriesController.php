@@ -33,6 +33,7 @@ class CategoriesController extends AppController
         $this->set('_serialize', ['categories']);
     }
     
+    
     /**
      * View method
      *

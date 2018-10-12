@@ -12,7 +12,11 @@ use App\Controller\AppController;
  */
 class ProductosController extends AppController
 {
-
+    public function initialize() {
+        parent::initialize();
+        $this->Auth->allow(['view']);
+    }
+    
     /**
      * Index method
      *
@@ -35,13 +39,13 @@ class ProductosController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
+    public function view($id = null) {
         $producto = $this->Productos->get($id, [
-            'contain' => ['Estados']
+            'contain' => ['Categories' => ['ParentCategories1' => ['ParentCategories2']]]
         ]);
 
-        $this->set('producto', $producto);
+        $this->set(compact('producto'));
+        $this->set('_serialize', ['producto']);
     }
 
     /**

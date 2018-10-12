@@ -111,6 +111,7 @@ Router::scope('/', function ($routes) {
         ]
     ]);
     $routes->resources('Categories');
+    $routes->resources('Productos');
 /*    $routes->resources('Cabeceras', [
         'map' => [
             'saveMany' => [

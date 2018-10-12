@@ -48,6 +48,18 @@ class CategoriesTable extends Table
             'foreignKey' => 'parent_id'
         ])->setProperty('child2Categories');
         
+        $this->belongsTo('ParentCategories1', [
+            'className' => 'Categories',
+            'foreignKey' => 'parent_id',
+            'joinType' => 'LEFT'
+        ]);
+        
+        $this->belongsTo('ParentCategories2', [
+            'className' => 'Categories',
+            'foreignKey' => 'parent_id',
+            'joinType' => 'LEFT'
+        ]);
+        
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'

@@ -9,13 +9,13 @@ use Cake\Validation\Validator;
 /**
  * Productos Model
  *
+ * @property |\Cake\ORM\Association\BelongsTo $Categories
  * @property \App\Model\Table\EstadosTable|\Cake\ORM\Association\BelongsTo $Estados
  *
  * @method \App\Model\Entity\Producto get($primaryKey, $options = [])
  * @method \App\Model\Entity\Producto newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Producto[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Producto|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Producto|bool saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Producto patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Producto[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Producto findOrCreate($search, callable $callback = null, $options = [])
@@ -35,8 +35,12 @@ class ProductosTable extends Table
 
         $this->setTable('productos');
         $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'estado_id']);
+        $this->setPrimaryKey('id');
 
+        $this->belongsTo('Categories', [
+            'foreignKey' => 'category_id',
+            'joinType' => 'INNER'
+        ]);
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
@@ -71,6 +75,17 @@ class ProductosTable extends Table
             ->maxLength('nombre3', 60)
             ->allowEmpty('nombre3');
 
+        $validator
+            ->scalar('detalle')
+            ->requirePresence('detalle', 'create')
+            ->notEmpty('detalle');
+
+        $validator
+            ->scalar('imagen')
+            ->maxLength('imagen', 60)
+            ->requirePresence('imagen', 'create')
+            ->notEmpty('imagen');
+
         return $validator;
     }
 
@@ -83,6 +98,7 @@ class ProductosTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->existsIn(['category_id'], 'Categories'));
         $rules->add($rules->existsIn(['estado_id'], 'Estados'));
 
         return $rules;

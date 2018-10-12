@@ -36,8 +36,8 @@ class ProductosTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Productos') ? [] : ['className' => ProductosTable::class];
-        $this->Productos = TableRegistry::getTableLocator()->get('Productos', $config);
+        $config = TableRegistry::exists('Productos') ? [] : ['className' => ProductosTable::class];
+        $this->Productos = TableRegistry::get('Productos', $config);
     }
 
     /**

@@ -7,9 +7,12 @@ use Cake\ORM\Entity;
  * Producto Entity
  *
  * @property int $id
+ * @property int $category_id
  * @property string $descripcion
  * @property string $nombre2
  * @property string $nombre3
+ * @property string $detalle
+ * @property string $imagen
  * @property int $estado_id
  *
  * @property \App\Model\Entity\Estado $estado
@@ -30,6 +33,8 @@ class Producto extends Entity
         'descripcion' => true,
         'nombre2' => true,
         'nombre3' => true,
+        'detalle' => true,
+        'imagen' => true,
         'estado' => true
     ];
 }
