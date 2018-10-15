@@ -29,14 +29,17 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
 
         $this->setTable('users');
         $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'estado_id']);
+        $this->setPrimaryKey('id');
 
+        $this->belongsTo('Roles', [
+            'foreignKey' => 'rol_id',
+            'joinType' => 'INNER'
+        ])->property('rol');
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
             'joinType' => 'INNER'
@@ -49,23 +52,19 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator) {
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
 
         $validator
             ->scalar('username')
-            ->maxLength('username', 60)
             ->requirePresence('username', 'create')
             ->notEmpty('username');
 
         $validator
             ->scalar('password')
-            ->maxLength('password', 60)
-            ->requirePresence('password', 'create')
-            ->notEmpty('password');
+            ->allowEmpty('password');
 
         return $validator;
     }
@@ -80,6 +79,7 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->existsIn(['rol_id'], 'Roles'));
         $rules->add($rules->existsIn(['estado_id'], 'Estados'));
 
         return $rules;

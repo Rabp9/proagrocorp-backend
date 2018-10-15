@@ -112,6 +112,22 @@ Router::scope('/', function ($routes) {
     ]);
     $routes->resources('Categories');
     $routes->resources('Productos');
+    $routes->resources('Users', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'login' => [
+                'action' => 'login',
+                'method' => 'POST'
+            ],
+            'token' => [
+                'action' => 'token',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
 /*    $routes->resources('Cabeceras', [
         'map' => [
             'saveMany' => [
