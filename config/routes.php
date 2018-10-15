@@ -112,6 +112,7 @@ Router::scope('/', function ($routes) {
     ]);
     $routes->resources('Categories');
     $routes->resources('Productos');
+    $routes->resources('Roles');
     $routes->resources('Users', [
         'map' => [
             'getAdmin' => [
@@ -126,6 +127,22 @@ Router::scope('/', function ($routes) {
                 'action' => 'token',
                 'method' => 'POST'
             ]
+        ]
+    ]);
+    $routes->resources('Slides', [
+        'map' => [
+            'previewImagen' => [
+                'action' => 'previewImagen',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'saveMany' => [
+                'action' => 'saveMany',
+                'method' => 'POST'
+            ],
         ]
     ]);
 /*    $routes->resources('Cabeceras', [

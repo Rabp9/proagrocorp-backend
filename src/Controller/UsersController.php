@@ -2,6 +2,10 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Utility\Hash;
+use Cake\Network\Exception\UnauthorizedException;
+use Cake\Utility\Security;
+use Firebase\JWT\JWT;
 
 /**
  * Users Controller
