@@ -2,6 +2,9 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
+use Cake\ORM\TableRegistry;
 
 /**
  * Slides Controller
@@ -96,13 +99,13 @@ class SlidesController extends AppController
         if ($this->request->is("post")) {
             $imagen = $this->request->data["file"];
             
-            $path_dst = WWW_ROOT . "tmp" . DS;
+            $pathDst = WWW_ROOT . "tmp" . DS;
             $ext = pathinfo($imagen['name'], PATHINFO_EXTENSION);
             $filename = 'slide-' . $this->Random->randomString() . '.' . $ext;
            
-            $filename_src = $imagen["tmp_name"];
-            $file_src = new File($filename_src);
-            if ($file_src->copy($path_dst . $filename)) {
+            $filenameSrc = $imagen["tmp_name"];
+            $fileSrc = new File($filenameSrc);
+            if ($fileSrc->copy($pathDst . $filename)) {
                 $code = 200;
                 $message = 'La imagen fue subida correctamente';
             } else {
