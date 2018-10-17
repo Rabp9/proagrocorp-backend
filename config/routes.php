@@ -94,7 +94,7 @@ Router::scope('/', function ($routes) {
             ],
             'indexAdmin' => [
                 'action' => 'indexAdmin',
-                'method' => 'GET'
+                'method' => 'POST'
             ]
         ]
     ]);

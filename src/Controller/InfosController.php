@@ -26,19 +26,19 @@ class InfosController extends AppController
      */
     public function getMany($descripciones = null) {
         $descripciones = $this->request->data;
-        $info = array();
+        $infos = array();
         
         if ($this->request->is('post')) {
             foreach ($descripciones as $descripcion) {
                 $valor = $this->Infos->find()
                     ->where(['descripcion' => $descripcion])
                     ->first()->valor;
-                $info[$descripcion] = $valor;
+                $infos[$descripcion] = $valor;
             }
         }
         
-        $this->set(compact('info'));
-        $this->set('_serialize', ['info']);
+        $this->set(compact('infos'));
+        $this->set('_serialize', ['infos']);
     }
 
     /**
@@ -46,9 +46,19 @@ class InfosController extends AppController
      *
      * @return \Cake\Http\Response|void
      */
-    public function indexAdmin() {
-        $infos = $this->Infos->find();
-
+    public function indexAdmin($descripciones = null) {
+        $descripciones = $this->request->data;
+        $infos = array();
+        
+        if ($this->request->is('post')) {
+            foreach ($descripciones as $descripcion) {
+                $info = $this->Infos->find()
+                    ->where(['descripcion' => $descripcion])
+                    ->first();
+                $infos[] = $info;
+            }
+        }
+        
         $this->set(compact('infos'));
         $this->set('_serialize', ['infos']);
     }
