@@ -95,6 +95,10 @@ Router::scope('/', function ($routes) {
             'indexAdmin' => [
                 'action' => 'indexAdmin',
                 'method' => 'POST'
+            ],
+            'previewImagen' => [
+                'action' => 'previewImagen',
+                'method' => 'POST'
             ]
         ]
     ]);
