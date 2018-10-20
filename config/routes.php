@@ -114,7 +114,14 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Categories');
+    $routes->resources('Categories', [
+        'map' => [
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ]
+        ]
+    ]);
     $routes->resources('Productos');
     $routes->resources('Roles');
     $routes->resources('Users', [

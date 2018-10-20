@@ -41,12 +41,12 @@ class CategoriesTable extends Table
         $this->hasMany('Child1Categories', [
             'className' => 'Categories',
             'foreignKey' => 'parent_id'
-        ])->setProperty('child1Categories');
+        ])->setProperty('children');
         
         $this->hasMany('Child2Categories', [
             'className' => 'Categories',
             'foreignKey' => 'parent_id'
-        ])->setProperty('child2Categories');
+        ])->setProperty('children');
         
         $this->belongsTo('ParentCategories1', [
             'className' => 'Categories',
