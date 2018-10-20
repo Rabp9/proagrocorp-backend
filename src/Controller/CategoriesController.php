@@ -133,4 +133,35 @@ class CategoriesController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+    
+    /**
+     * Get Tree List method
+     *
+     * @return \Cake\Network\Response|null
+     */
+    public function getTreeList($spacer = null) {
+        $spacer = $this->request->getParam('spacer');
+        
+        $this->Categories->recover();
+        $categories = $this->Categories->find()
+            ->where(['estado_id' => 1])
+            ->select(['id', 'lft', 'rght', 'descripcion'])
+            ->order(['lft' => 'ASC'])
+            ->toArray();
+        
+        for ($i = 0; $i < sizeof($categories); $i++) {
+            if ($i != 0) {
+                $v_current = $categories[$i];
+                for ($j = $i - 1; $j >= 0; $j--) {
+                    $v_compare = $categories[$j];
+                    if ($v_current->lft < $v_compare->rght) {
+                        $categories[$i]->descripcion = $spacer . $categories[$i]->descripcion;
+                    }
+                }
+            }
+        }
+        
+        $this->set(compact('categories'));
+        $this->set('_serialize', ['categories']);
+    }
 }

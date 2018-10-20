@@ -119,6 +119,10 @@ Router::scope('/', function ($routes) {
             'getAdmin' => [
                 'action' => 'getAdmin',
                 'method' => 'GET'
+            ],
+            'getTreeList/:spacer' => [
+                'action' => 'getTreeList',
+                'method' => 'GET'
             ]
         ]
     ]);

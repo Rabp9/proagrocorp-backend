@@ -34,7 +34,7 @@ class CategoriesTable extends Table
         parent::initialize($config);
 
         $this->setTable('categories');
-        $this->setDisplayField('id');
+        $this->setDisplayField('descripcion');
         $this->setPrimaryKey('id');
         $this->addBehavior('Tree');
 
