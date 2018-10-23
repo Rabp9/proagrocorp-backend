@@ -110,7 +110,6 @@ class CategoriesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['category_id'], 'Categories'));
         $rules->add($rules->existsIn(['estado_id'], 'Estados'));
 
         return $rules;

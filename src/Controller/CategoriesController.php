@@ -58,7 +58,6 @@ class CategoriesController extends AppController
         $this->set('_serialize', ['categories']);
     }
     
-    
     /**
      * View method
      *
@@ -66,13 +65,11 @@ class CategoriesController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $category = $this->Categories->get($id, [
-            'contain' => ['Categories', 'Estados']
-        ]);
+    public function view($id = null) {
+        $category = $this->Categories->get($id);
 
-        $this->set('category', $category);
+        $this->set(compact('category'));
+        $this->set('_serialize', ['category']);
     }
 
     /**
@@ -80,21 +77,32 @@ class CategoriesController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
+    public function add() {
         $category = $this->Categories->newEntity();
+        
         if ($this->request->is('post')) {
             $category = $this->Categories->patchEntity($category, $this->request->getData());
-            if ($this->Categories->save($category)) {
-                $this->Flash->success(__('The category has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+            
+            if ($category->portada) {
+                $pathSrc = WWW_ROOT . "tmp" . DS;
+                $fileSrc = new File($pathSrc . $category->portada);
+             
+                $pathDst = WWW_ROOT . 'img' . DS . 'categories' . DS;
+                $category->portada= $this->Random->randomFileName($pathDst, 'category-', $fileSrc->ext());
+                
+                $fileSrc->copy($pathDst . $category->portada);
             }
-            $this->Flash->error(__('The category could not be saved. Please, try again.'));
+            
+            if ($this->Categories->save($category)) {
+                $code = 200;
+                $message = 'La categoría fue guardado correctamente';
+            } else {
+                $message = 'La categoría no fue guardado correctamente';
+            }
         }
-        $categories = $this->Categories->Categories->find('list', ['limit' => 200]);
-        $estados = $this->Categories->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('category', 'categories', 'estados'));
+        
+        $this->set(compact('category', 'message', 'code'));
+        $this->set('_serialize', ['category', 'message', 'code']);
     }
 
     /**
@@ -154,7 +162,7 @@ class CategoriesController extends AppController
         $this->Categories->recover();
         $categories = $this->Categories->find()
             ->where(['estado_id' => 1])
-            ->select(['id', 'lft', 'rght', 'descripcion'])
+            ->select(['id', 'id', 'lft', 'rght', 'descripcion'])
             ->order(['lft' => 'ASC'])
             ->toArray();
         
