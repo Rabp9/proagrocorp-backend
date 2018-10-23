@@ -123,6 +123,10 @@ Router::scope('/', function ($routes) {
             'getTreeList/:spacer' => [
                 'action' => 'getTreeList',
                 'method' => 'GET'
+            ],
+            'previewPortada' => [
+                'action' => 'previewPortada',
+                'method' => 'POST'
             ]
         ]
     ]);

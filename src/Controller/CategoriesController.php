@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Utility\Hash;
+use Cake\Filesystem\Folder;
+use Cake\Filesystem\File;
 /**
  * Categories Controller
  *
@@ -23,11 +25,18 @@ class CategoriesController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
+        $estado_id = $this->request->getQuery('estado_id');
         $this->Categories->recover();
         
-        $categories = $this->Categories->find()
+        $query = $this->Categories->find()
             ->contain(['Child1Categories' => ['Child2Categories']])
-            ->where(['parent_id IS' => null, 'estado_id' => 1]);
+            ->where(['parent_id IS' => null]);
+        
+        if ($estado_id) {
+            $query->where(['Categories.estado_id' => $estado_id]);
+        }
+        
+        $categories = $query->toArray();
         
         $this->set(compact('categories'));
         $this->set('_serialize', ['categories']);
@@ -163,5 +172,27 @@ class CategoriesController extends AppController
         
         $this->set(compact('categories'));
         $this->set('_serialize', ['categories']);
+    }
+    
+    public function previewPortada() {
+        if ($this->request->is("post")) {
+            $portada = $this->request->data["file"];
+            
+            $pathDst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($portada['name'], PATHINFO_EXTENSION);
+            $filename = 'category-' . $this->Random->randomString() . '.' . $ext;
+            
+            $filenameSrc = $portada["tmp_name"];
+            $fileSrc = new File($filenameSrc);
+            if ($fileSrc->copy($pathDst . $filename)) {
+                $code = 200;
+                $message = 'La portada fue subida correctamente';
+            } else {
+                $message = "La portada no fue subida con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["message", "filename"]);
+        }
     }
 }
