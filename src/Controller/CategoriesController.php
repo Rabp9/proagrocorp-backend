@@ -5,6 +5,7 @@ use App\Controller\AppController;
 use Cake\Utility\Hash;
 use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
+
 /**
  * Categories Controller
  *
@@ -71,7 +72,7 @@ class CategoriesController extends AppController
         $this->set(compact('category'));
         $this->set('_serialize', ['category']);
     }
-
+    
     /**
      * Add method
      *
@@ -160,21 +161,28 @@ class CategoriesController extends AppController
         $spacer = $this->request->getParam('spacer');
         
         $this->Categories->recover();
-        $categories = $this->Categories->find()
+        $categoriesPre = $this->Categories->find()
             ->where(['estado_id' => 1])
-            ->select(['id', 'id', 'lft', 'rght', 'descripcion'])
+            ->select(['id', 'lft', 'rght', 'descripcion'])
             ->order(['lft' => 'ASC'])
             ->toArray();
         
-        for ($i = 0; $i < sizeof($categories); $i++) {
+        for ($i = 0; $i < sizeof($categoriesPre); $i++) {
             if ($i != 0) {
-                $v_current = $categories[$i];
+                $v_current = $categoriesPre[$i];
                 for ($j = $i - 1; $j >= 0; $j--) {
-                    $v_compare = $categories[$j];
+                    $v_compare = $categoriesPre[$j];
                     if ($v_current->lft < $v_compare->rght) {
-                        $categories[$i]->descripcion = $spacer . $categories[$i]->descripcion;
+                        $categoriesPre[$i]->descripcion = $spacer . $categoriesPre[$i]->descripcion;
                     }
                 }
+            }
+        }
+        strpos($categoriesPre[$i]->descripcion, $spacer.$spacer);
+        $categories = [];
+        for ($i = 0; $i < sizeof($categoriesPre); $i++) {
+            if ($categoriesPre[$i]->descripcion) {
+                $categories[] = $categoriesPre[$i];
             }
         }
         
