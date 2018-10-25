@@ -178,10 +178,9 @@ class CategoriesController extends AppController
                 }
             }
         }
-        strpos($categoriesPre[$i]->descripcion, $spacer.$spacer);
         $categories = [];
         for ($i = 0; $i < sizeof($categoriesPre); $i++) {
-            if ($categoriesPre[$i]->descripcion) {
+            if (strpos($categoriesPre[$i]->descripcion, $spacer . $spacer) != 'false') {
                 $categories[] = $categoriesPre[$i];
             }
         }
