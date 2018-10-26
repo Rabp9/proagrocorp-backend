@@ -16,101 +16,55 @@ class RolesController extends AppController
         parent::initialize();
         $this->Auth->allow(['index', 'view']);
     }
-
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|void
+     * @return \Cake\Network\Response|null
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Estados']
-        ];
-        $roles = $this->paginate($this->Roles);
-
+    public function index() {
+        $roles = $this->Roles->find()
+            ->where(['estado_id' => 1]);
         $this->set(compact('roles'));
+        $this->set('_serialize', ['roles']);
     }
-
     /**
-     * View method
+     * Get Admin method
      *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return \Cake\Network\Response|null
      */
-    public function view($id = null)
-    {
-        $role = $this->Roles->get($id, [
-            'contain' => ['Estados', 'ControllerRoles.Controllers']
-        ]);
-
-        $this->set('role', $role);
+    public function getAdmin() {
+        $roles = $this->Roles->find();
+        $this->set(compact('roles'));
+        $this->set('_serialize', ['roles']);
     }
 
+    public function view($id) {
+        $rol = $this->Roles->get($id, [
+            'contain' => ['ControllerRoles.Controllers']
+        ]);
+        
+        $this->set(compact('rol'));
+        $this->set('_serialize', ['rol']);
+    }
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-        $role = $this->Roles->newEntity();
+    public function add() {
+        $rol = $this->Roles->newEntity();
+        
         if ($this->request->is('post')) {
-            $role = $this->Roles->patchEntity($role, $this->request->getData());
-            if ($this->Roles->save($role)) {
-                $this->Flash->success(__('The role has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+            $rol = $this->Roles->patchEntity($rol, $this->request->getData());
+ 
+            if ($this->Roles->save($rol)) {
+                $code = 200;
+                $message = 'El rol fue guardado correctamente';
+            } else {
+                $message = 'El rol no fue guardado correctamente';
             }
-            $this->Flash->error(__('The role could not be saved. Please, try again.'));
         }
-        $estados = $this->Roles->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('role', 'estados'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $role = $this->Roles->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $role = $this->Roles->patchEntity($role, $this->request->getData());
-            if ($this->Roles->save($role)) {
-                $this->Flash->success(__('The role has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The role could not be saved. Please, try again.'));
-        }
-        $estados = $this->Roles->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('role', 'estados'));
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Role id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $role = $this->Roles->get($id);
-        if ($this->Roles->delete($role)) {
-            $this->Flash->success(__('The role has been deleted.'));
-        } else {
-            $this->Flash->error(__('The role could not be deleted. Please, try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
+        $this->set(compact('rol', 'message', 'code'));
+        $this->set('_serialize', ['rol', 'message', 'code']);
     }
 }

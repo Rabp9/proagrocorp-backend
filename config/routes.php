@@ -131,151 +131,6 @@ Router::scope('/', function ($routes) {
         ]
     ]);
     $routes->resources('Productos');
-    $routes->resources('Roles');
-    $routes->resources('Users', [
-        'map' => [
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'login' => [
-                'action' => 'login',
-                'method' => 'POST'
-            ],
-            'token' => [
-                'action' => 'token',
-                'method' => 'POST'
-            ]
-        ]
-    ]);
-    $routes->resources('Slides', [
-        'map' => [
-            'previewImagen' => [
-                'action' => 'previewImagen',
-                'method' => 'POST'
-            ],
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'saveMany' => [
-                'action' => 'saveMany',
-                'method' => 'POST'
-            ],
-        ]
-    ]);
-/*    $routes->resources('Cabeceras', [
-        'map' => [
-            'saveMany' => [
-                'action' => 'saveMany',
-                'method' => 'POST'
-            ],
-            'getData/:data' => [
-                'action' => 'getData',
-                'method' => 'GET'
-            ],
-            'getDataMany' => [
-                'action' => 'getDataMany',
-                'method' => 'POST'
-            ],
-            'getDataByData' => [
-                'action' => 'getDataByData',
-                'method' => 'POST'
-            ],
-            'previewImagen' => [
-                'action' => 'previewImagen',
-                'method' => 'POST'
-            ],
-            'getByDescripcion' => [
-                'action' => 'getByDescripcion',
-                'method' => 'GET'
-            ]
-        ]
-    ]);
-    $routes->resources('Slides', [
-        'map' => [
-            'previewImagen' => [
-                'action' => 'previewImagen',
-                'method' => 'POST'
-            ],
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'saveMany' => [
-                'action' => 'saveMany',
-                'method' => 'POST'
-            ],
-        ]
-    ]);
-    $routes->resources('Clientes', [
-        'map' => [
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'previewImagen' => [
-                'action' => 'previewImagen',
-                'method' => 'POST'
-            ]
-        ]
-    ]);
-    $routes->resources('Contactos', [
-        'map' => [
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'previewImagen' => [
-                'action' => 'previewImagen',
-                'method' => 'POST'
-            ]
-        ]
-    ]);
-    $routes->resources('Servicios', [
-        'map' => [
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'previewPortada' => [
-                'action' => 'previewPortada',
-                'method' => 'POST'
-            ],
-            'upload' => [
-                'action' => 'upload',
-                'method' => 'POST'
-            ],
-            'get_some/:amount' => [
-                'action' => 'getSome',
-                'method' => 'GET'
-            ],
-            'getIndex' => [
-                'action' => 'getIndex',
-                'method' => 'GET'
-            ]
-        ]
-    ]);
-    $routes->resources('Noticias', [
-        'map' => [
-            'getAdmin' => [
-                'action' => 'getAdmin',
-                'method' => 'GET'
-            ],
-            'previewPortada' => [
-                'action' => 'previewPortada',
-                'method' => 'POST'
-            ],
-            'upload' => [
-                'action' => 'upload',
-                'method' => 'POST'
-            ],
-            'get_some/:amount' => [
-                'action' => 'getSome',
-                'method' => 'GET'
-            ]
-        ]
-    ]);    
     $routes->resources('Roles', [
         'map' => [
             'getAdmin' => [
@@ -300,7 +155,23 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Controllers');*/
+    $routes->resources('Slides', [
+        'map' => [
+            'previewImagen' => [
+                'action' => 'previewImagen',
+                'method' => 'POST'
+            ],
+            'getAdmin' => [
+                'action' => 'getAdmin',
+                'method' => 'GET'
+            ],
+            'saveMany' => [
+                'action' => 'saveMany',
+                'method' => 'POST'
+            ],
+        ]
+    ]);
+    $routes->resources('Controllers');
 });
 
 Plugin::routes();
