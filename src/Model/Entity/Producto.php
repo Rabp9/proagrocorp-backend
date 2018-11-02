@@ -30,11 +30,6 @@ class Producto extends Entity
      * @var array
      */
     protected $_accessible = [
-        'descripcion' => true,
-        'nombre2' => true,
-        'nombre3' => true,
-        'detalle' => true,
-        'imagen' => true,
-        'estado' => true
+        '*' => true
     ];
 }

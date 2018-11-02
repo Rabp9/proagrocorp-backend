@@ -130,7 +130,14 @@ Router::scope('/', function ($routes) {
             ]
         ]
     ]);
-    $routes->resources('Productos');
+    $routes->resources('Productos', [
+        'map' => [
+            'previewImagen' => [
+                'action' => 'previewImagen',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
     $routes->resources('Roles', [
         'map' => [
             'getAdmin' => [
