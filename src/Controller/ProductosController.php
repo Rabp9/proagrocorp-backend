@@ -16,7 +16,7 @@ class ProductosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['view']);
+        $this->Auth->allow(['view', 'index']);
     }
     
     /**

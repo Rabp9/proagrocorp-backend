@@ -39,6 +39,7 @@ class SlidesTable extends Table
             'joinType' => 'INNER'
         ]);
     }
+    
     public function afterSave($event, $entity, $options) {
         $imageOperationsLarge = [
             'thumbnail' => [
