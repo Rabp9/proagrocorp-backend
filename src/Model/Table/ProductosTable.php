@@ -80,12 +80,6 @@ class ProductosTable extends Table
             ->requirePresence('detalle', 'create')
             ->notEmpty('detalle');
 
-        $validator
-            ->scalar('imagen')
-            ->maxLength('imagen', 60)
-            ->requirePresence('imagen', 'create')
-            ->notEmpty('imagen');
-
         return $validator;
     }
 

@@ -108,8 +108,10 @@ class ProductosController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add() {
+        $producto = $this->Productos->newEntity();
+        
         if ($this->request->is('post')) {
-            $producto = $this->Productos->newEntity($this->request->getData());
+            $producto = $this->Productos->patchEntity($producto, $this->request->getData());
             
             if ($this->request->getData('changed')) {
                 $pathSrc = WWW_ROOT . "tmp" . DS;
