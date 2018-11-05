@@ -17,7 +17,7 @@ class CategoriesController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['index']);
+        $this->Auth->allow(['view', 'index']);
     }
     
     /**
@@ -67,8 +67,10 @@ class CategoriesController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null) {
-        $category = $this->Categories->get($id);
-
+        $category = $this->Categories->get($id, [
+            'contain' => ['ParentCategories1' => ['ParentCategories2']]
+        ]);
+        
         $this->set(compact('category'));
         $this->set('_serialize', ['category']);
     }
