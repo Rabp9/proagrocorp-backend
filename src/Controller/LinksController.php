@@ -24,10 +24,38 @@ class LinksController extends AppController
      * @return \Cake\Http\Response|void
      */
     public function index() {
-        $links = $this->Links->find();
-
-        $this->set(compact('links'));
-        $this->set('_serialize', ['links']);
+        $estado_id = $this->request->query('estado_id');
+        $text = $this->request->query('text');
+        $items_per_page = $this->request->query('items_per_page');
+        
+        $this->paginate = [
+            'limit' => $items_per_page
+        ];
+        
+        $query = $this->Links->find()
+            ->order(['Links.id' => 'ASC']);
+        
+        if ($text) {
+            $query->where(['OR' => [
+                'Links.descripcion LIKE' => '%' . $text . '%',
+                'Links.url LIKE' => '%' . $text . '%',
+                'Links.ubicacion LIKE' => '%' . $text . '%'
+            ]]);
+        }
+        
+        if ($estado_id) {
+            $query->where(['Links.estado_id' => $estado_id]);
+        }
+        
+        $links = $this->paginate($query);
+        $paginate = $this->request->param('paging')['Links'];
+        $pagination = [
+            'totalItems' => $paginate['count'],
+            'itemsPerPage' =>  $paginate['perPage']
+        ];
+        
+        $this->set(compact('links', 'pagination'));
+        $this->set('_serialize', ['links', 'pagination']);
     }
 
     public function getHeader() {

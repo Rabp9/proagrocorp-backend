@@ -41,10 +41,18 @@ class SlidesController extends AppController
      *
      * @return \Cake\Network\Response|null
      */
-    public function getAdmin() {        
-        $slides = $this->Slides->find()
+    public function getAdmin() {
+        $estado_id = $this->request->query('estado_id');
+        
+        $query = $this->Slides->find()
             ->order(['orden' => 'ASC']);
                 
+        if ($estado_id) {
+            $query->where(['Slides.estado_id' => $estado_id]);
+        }
+        
+        $slides = $query->toArray();
+        
         $this->set(compact('slides'));
         $this->set('_serialize', ['slides']);
     }
