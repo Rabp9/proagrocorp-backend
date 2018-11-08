@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
 
 /**
  * Links Controller
@@ -16,7 +17,6 @@ class LinksController extends AppController
         parent::initialize();
         $this->Auth->allow(['getHeader', 'getFooter']);
     }
-    
 
     /**
      * Index method
@@ -27,7 +27,7 @@ class LinksController extends AppController
         $links = $this->Links->find();
 
         $this->set(compact('links'));
-        $this->set('_serialize', 'links');
+        $this->set('_serialize', ['links']);
     }
 
     public function getHeader() {
@@ -53,11 +53,8 @@ class LinksController extends AppController
      * @return \Cake\Http\Response|void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function view($id = null)
-    {
-        $link = $this->Links->get($id, [
-            'contain' => ['Estados']
-        ]);
+    public function view($id = null) {
+        $link = $this->Links->get($id);
 
         $this->set('link', $link);
     }
@@ -67,64 +64,56 @@ class LinksController extends AppController
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
+    public function add() {
         $link = $this->Links->newEntity();
+        
         if ($this->request->is('post')) {
             $link = $this->Links->patchEntity($link, $this->request->getData());
-            if ($this->Links->save($link)) {
-                $this->Flash->success(__('The link has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+            
+            if ($this->request->getData('changed')) {
+                $pathSrc = WWW_ROOT . "tmp" . DS;
+                $fileSrc = new File($pathSrc . $link->imagen);
+            
+                $pathDst = WWW_ROOT . 'img' . DS . 'links' . DS;
+                $link->imagen = $this->Random->randomFileName($pathDst, 'link-', $fileSrc->ext());
+                
+                $fileSrc->copy($pathDst . $link->imagen);
             }
-            $this->Flash->error(__('The link could not be saved. Please, try again.'));
-        }
-        $estados = $this->Links->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('link', 'estados'));
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Link id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $link = $this->Links->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $link = $this->Links->patchEntity($link, $this->request->getData());
+            
             if ($this->Links->save($link)) {
-                $this->Flash->success(__('The link has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+                $code = 200;
+                $message = 'El link fue guardado correctamente';
+            } else {
+                $errors = $link->errors();
+                $code = 500;
+                $message = 'El link no fue guardado correctamente';
             }
-            $this->Flash->error(__('The link could not be saved. Please, try again.'));
         }
-        $estados = $this->Links->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('link', 'estados'));
+        
+        $this->set(compact('link', 'message', 'code', 'errors'));
+        $this->set('_serialize', ['link', 'message', 'code', 'errors']);
     }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Link id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $link = $this->Links->get($id);
-        if ($this->Links->delete($link)) {
-            $this->Flash->success(__('The link has been deleted.'));
-        } else {
-            $this->Flash->error(__('The link could not be deleted. Please, try again.'));
+    
+    public function previewImagen() {
+        if ($this->request->is("post")) {
+            $imagen = $this->request->data["file"];
+            
+            $pathDst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($imagen['name'], PATHINFO_EXTENSION);
+            $filename = 'link-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filenameSrc = $imagen["tmp_name"];
+            $fileSrc = new File($filenameSrc);
+            if ($fileSrc->copy($pathDst . $filename)) {
+                $code = 200;
+                $message = 'El link fue subido correctamente';
+            } else {
+                $code = 500;
+                $message = "El link no fue subido con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["code", "message", "filename"]);
         }
-
-        return $this->redirect(['action' => 'index']);
     }
 }

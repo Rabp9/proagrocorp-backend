@@ -28,10 +28,6 @@ class Link extends Entity
      * @var array
      */
     protected $_accessible = [
-        'descripcion' => true,
-        'url' => true,
-        'imagen' => true,
-        'ubicacion' => true,
-        'estado' => true
+        '*' => true
     ];
 }

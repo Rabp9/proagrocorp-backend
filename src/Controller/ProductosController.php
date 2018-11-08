@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-use Cake\Filesystem\Folder;
 use Cake\Filesystem\File;
 
 /**
@@ -94,11 +93,12 @@ class ProductosController extends AppController
                 $code = 200;
                 $message = 'El producto fue subido correctamente';
             } else {
+                $code = 500;
                 $message = "El producto no fue subido con éxito";
             }
             
             $this->set(compact("code", "message", "filename"));
-            $this->set("_serialize", ["message", "filename"]);
+            $this->set("_serialize", ["code", "message", "filename"]);
         }
     }
     

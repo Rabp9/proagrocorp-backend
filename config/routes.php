@@ -175,10 +175,18 @@ Router::scope('/', function ($routes) {
             'saveMany' => [
                 'action' => 'saveMany',
                 'method' => 'POST'
-            ],
+            ]
         ]
     ]);
     $routes->resources('Controllers');
+    $routes->resources('links', [
+        'map' => [
+            'previewImagen' => [
+                'action' => 'previewImagen',
+                'method' => 'POST'
+            ]
+        ]
+    ]);
 });
 
 Plugin::routes();

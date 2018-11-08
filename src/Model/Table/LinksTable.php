@@ -29,13 +29,13 @@ class LinksTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
 
+        $this->addBehavior('Burzum/Imagine.Imagine');
         $this->setTable('links');
         $this->setDisplayField('id');
-        $this->setPrimaryKey(['id', 'estado_id']);
+        $this->setPrimaryKey('id');
 
         $this->belongsTo('Estados', [
             'foreignKey' => 'estado_id',
@@ -49,8 +49,7 @@ class LinksTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator) {
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
@@ -86,10 +85,43 @@ class LinksTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
-    {
+    public function buildRules(RulesChecker $rules) {
         $rules->add($rules->existsIn(['estado_id'], 'Estados'));
 
         return $rules;
+    }
+    
+    public function afterSave($event, $entity, $options) {
+        $imageOperationsLarge = [
+            'thumbnail' => [
+                'height' => 800,
+                'width' => 800
+            ],
+        ];
+        $imageOperationsSmall = [
+            'thumbnail' => [
+                'height' => 400,
+                'width' => 400
+            ],
+        ];
+        
+        $path = WWW_ROOT . "img". DS . 'links' . DS;
+        
+        if ($entity->imagen) {
+            $ext = pathinfo($entity->imagen, PATHINFO_EXTENSION);
+            $filenameBase = basename($entity->imagen, '.' . $ext);
+            if (file_exists($path . $entity->imagen)) {
+                $this->processImage($path . $entity->imagen,
+                    $path . $filenameBase . '_large.' . $ext,
+                    [],
+                    $imageOperationsLarge
+                );
+                $this->processImage($path . $entity->imagen,
+                    $path . $filenameBase . '_small.' . $ext,
+                    [],
+                    $imageOperationsSmall
+                );
+            }
+        }
     }
 }
