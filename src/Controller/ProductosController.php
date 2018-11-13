@@ -15,7 +15,7 @@ class ProductosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['view', 'index']);
+        $this->Auth->allow(['view', 'index', 'getRelacionados']);
     }
     
     /**
@@ -63,6 +63,7 @@ class ProductosController extends AppController
         $this->set(compact('productos', 'pagination'));
         $this->set('_serialize', ['productos', 'pagination']);
     }
+    
     /**
      * View method
      *
@@ -138,47 +139,20 @@ class ProductosController extends AppController
     }
 
     /**
-     * Edit method
+     * Index method
      *
-     * @param string|null $id Producto id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     * @return \Cake\Http\Response|void
      */
-    public function edit($id = null)
-    {
-        $producto = $this->Productos->get($id, [
-            'contain' => []
+    public function getRelacionados() {
+        $producto_id = $this->request->param("producto_id");
+        $producto = $this->Productos->get($producto_id);
+        
+        $productos = $this->Productos->find()->where([
+            "Productos.category_id" => $producto->category_id,
+            "Productos.id !=" => $producto->id 
         ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $producto = $this->Productos->patchEntity($producto, $this->request->getData());
-            if ($this->Productos->save($producto)) {
-                $this->Flash->success(__('The producto has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The producto could not be saved. Please, try again.'));
-        }
-        $estados = $this->Productos->Estados->find('list', ['limit' => 200]);
-        $this->set(compact('producto', 'estados'));
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Producto id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $producto = $this->Productos->get($id);
-        if ($this->Productos->delete($producto)) {
-            $this->Flash->success(__('The producto has been deleted.'));
-        } else {
-            $this->Flash->error(__('The producto could not be deleted. Please, try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
+                
+        $this->set(compact('productos'));
+        $this->set('_serialize', ['productos']);
     }
 }
