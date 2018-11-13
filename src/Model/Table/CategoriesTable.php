@@ -51,6 +51,11 @@ class CategoriesTable extends Table
         ])->setProperty('children')
             ->setConditions(['estado_id' => 1]);
         
+        $this->hasMany('Productos', [
+            'className' => 'Productos',
+            'foreignKey' => 'category_id'
+        ]);
+        
         $this->belongsTo('ParentCategories1', [
             'className' => 'Categories',
             'foreignKey' => 'parent_id',
