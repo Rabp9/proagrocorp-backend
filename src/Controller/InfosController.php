@@ -65,22 +65,6 @@ class InfosController extends AppController
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Info id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $info = $this->Infos->get($id, [
-            'contain' => []
-        ]);
-
-        $this->set('info', $info);
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
@@ -103,12 +87,14 @@ class InfosController extends AppController
                 $code = 200;
                 $message = 'La información fue guardada correctamente';
             } else {
+                $code = 500;
                 $message = 'La información no fue guardada correctamente';
+                $error = $info->errors();
             }
         }
         
-        $this->set(compact('info', 'message', 'code'));
-        $this->set('_serialize', ['info', 'message', 'code']);
+        $this->set(compact('info', 'message', 'code', 'error'));
+        $this->set('_serialize', ['info', 'message', 'code', 'error']);
     }
 
     /**

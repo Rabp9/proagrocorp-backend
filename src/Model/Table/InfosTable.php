@@ -56,7 +56,6 @@ class InfosTable extends Table
 
         $validator
             ->scalar('valor')
-            ->maxLength('valor', 45)
             ->allowEmpty('valor');
 
         $validator
