@@ -99,6 +99,10 @@ Router::scope('/', function ($routes) {
             'previewImagen' => [
                 'action' => 'previewImagen',
                 'method' => 'POST'
+            ],
+            'send' => [
+                'action' => 'send',
+                'method' => 'POST'
             ]
         ]
     ]);
@@ -127,6 +131,10 @@ Router::scope('/', function ($routes) {
             'previewPortada' => [
                 'action' => 'previewPortada',
                 'method' => 'POST'
+            ],
+            'search/:textSearch' => [
+                'action' => 'search',
+                'method' => 'GET'
             ]
         ]
     ]);
@@ -138,6 +146,10 @@ Router::scope('/', function ($routes) {
             ],
             'getRelacionados/:producto_id' => [
                 'action' => 'getRelacionados',
+                'method' => 'GET'
+            ],
+            'search/:textSearch' => [
+                'action' => 'search',
                 'method' => 'GET'
             ]
         ]

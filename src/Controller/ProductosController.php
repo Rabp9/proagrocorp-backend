@@ -15,7 +15,7 @@ class ProductosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['view', 'index', 'getRelacionados']);
+        $this->Auth->allow(['view', 'index', 'getRelacionados', 'search']);
     }
     
     /**
@@ -152,6 +152,24 @@ class ProductosController extends AppController
             "Productos.id !=" => $producto->id 
         ]);
                 
+        $this->set(compact('productos'));
+        $this->set('_serialize', ['productos']);
+    }
+    
+    /**
+     * Search method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function search() {
+        $textSearch = $this->request->param('textSearch');
+        
+        $productos = $this->Productos->find()
+            ->where([
+                'Productos.descripcion like' => "%" . $textSearch . "%",
+                'Productos.estado_id' => 1
+            ]);
+        
         $this->set(compact('productos'));
         $this->set('_serialize', ['productos']);
     }

@@ -17,7 +17,7 @@ class CategoriesController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['view', 'index']);
+        $this->Auth->allow(['view', 'index', 'search']);
     }
     
     /**
@@ -211,5 +211,23 @@ class CategoriesController extends AppController
             $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["message", "filename"]);
         }
+    }
+    
+    /**
+     * Search method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function search() {
+        $textSearch = $this->request->param('textSearch');
+        
+        $categories = $this->Categories->find()
+            ->where([
+                'Categories.descripcion like' => "%" . $textSearch . "%",
+                'Categories.estado_id' => 1
+            ]);
+        
+        $this->set(compact('categories'));
+        $this->set('_serialize', ['categories']);
     }
 }

@@ -229,9 +229,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'rabp99_transnv',
-            'password' => 'transnv123456',
-            'database' => 'rabp99_transnv',
+            'username' => 'rabp99_proagrocorp',
+            'password' => '*123456*.*123456*.',
+            'database' => 'rabp99_proagrocorp',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],

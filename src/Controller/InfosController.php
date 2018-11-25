@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Filesystem\File;
+use Cake\Mailer\Email;
 
 /**
  * Infos Controller
@@ -15,7 +16,7 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getMany', 'indexAdmin']);
+        $this->Auth->allow(['getMany', 'indexAdmin', 'send']);
     }
     
     /**
@@ -161,5 +162,30 @@ class InfosController extends AppController
             $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["code", "message", "filename"]);
         }
+    }
+    
+    /**
+     * Send method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function send() {
+        if ($this->request->is("post")) {
+            $mensaje = $this->request->getData();
+                     
+            $email = new Email('default');
+            
+            $email->from([$mensaje['email'] => $mensaje['nombres']])
+                ->to('rabp_91@hotmail.com')
+                ->emailFormat('html')
+                ->subject($mensaje['asunto'])
+                ->send($mensaje['body']);
+            
+            $code = 200;
+            $message = 'El mensaje fue enviado correctamente';
+        }
+        
+        $this->set(compact('message', 'code'));
+        $this->set('_serialize', ['message', 'code']);
     }
 }
