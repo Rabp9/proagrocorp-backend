@@ -103,6 +103,29 @@ class ProductosController extends AppController
         }
     }
     
+    public function previewFichaTecnica() {
+        if ($this->request->is("post")) {
+            $fichaTecnica = $this->request->data["file"];
+            
+            $pathDst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($fichaTecnica['name'], PATHINFO_EXTENSION);
+            $filename = 'fichaTecnica-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filenameSrc = $fichaTecnica["tmp_name"];
+            $fileSrc = new File($filenameSrc);
+            if ($fileSrc->copy($pathDst . $filename)) {
+                $code = 200;
+                $message = 'La ficha técnica fue subida correctamente';
+            } else {
+                $code = 500;
+                $message = "La ficha técnica no fue subida con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["code", "message", "filename"]);
+        }
+    }
+    
     /**
      * Add method
      *
@@ -114,7 +137,7 @@ class ProductosController extends AppController
         if ($this->request->is('post')) {
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
             
-            if ($this->request->getData('changed')) {
+            if ($this->request->getData('changedImagen')) {
                 $pathSrc = WWW_ROOT . "tmp" . DS;
                 $fileSrc = new File($pathSrc . $producto->imagen);
             
@@ -122,6 +145,16 @@ class ProductosController extends AppController
                 $producto->imagen = $this->Random->randomFileName($pathDst, 'producto-', $fileSrc->ext());
                 
                 $fileSrc->copy($pathDst . $producto->imagen);
+            }
+            
+            if ($this->request->getData('changedFichaTecnica')) {
+                $pathSrc = WWW_ROOT . "tmp" . DS;
+                $fileSrc = new File($pathSrc . $producto->fichaTecnica);
+            
+                $pathDst = WWW_ROOT . 'files' . DS . 'fichas' . DS;
+                $producto->fichaTecnica = $this->Random->randomFileName($pathDst, 'fichaTecnica-', $fileSrc->ext());
+                
+                $fileSrc->copy($pathDst . $producto->fichaTecnica);
             }
             
             if ($this->Productos->save($producto)) {

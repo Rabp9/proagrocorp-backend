@@ -144,6 +144,10 @@ Router::scope('/', function ($routes) {
                 'action' => 'previewImagen',
                 'method' => 'POST'
             ],
+            'previewFichaTecnica' => [
+                'action' => 'previewFichaTecnica',
+                'method' => 'POST'
+            ],
             'getRelacionados/:producto_id' => [
                 'action' => 'getRelacionados',
                 'method' => 'GET'
