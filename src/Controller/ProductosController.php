@@ -15,7 +15,7 @@ class ProductosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['view', 'index', 'getRelacionados', 'search']);
+        $this->Auth->allow(['view', 'index', 'getRelacionados', 'search', 'getSocial']);
     }
     
     /**
@@ -205,5 +205,36 @@ class ProductosController extends AppController
         
         $this->set(compact('productos'));
         $this->set('_serialize', ['productos']);
+    }
+    
+    private function getData($siteRoot) {
+        $id = ctype_digit($_GET['id']) ? $_GET['id'] : 1;
+        $rawData = file_get_contents($siteRoot . 'api/productos/' . $id . '.json');
+        return json_decode($rawData);
+    }
+    
+    private function makePage($data, $siteRoot) {
+        $this->viewBuilder()->setLayout(false);
+        echo "<!DOCTYPE html>
+            <html>
+                <head>
+                <meta property='og:title' content='" . $data->producto->descripcion . "' />
+                <meta property='og:description' content='" . $data->producto->detalle . "' />
+                <meta property='og:image' content='" . $data->producto->imagen . "' />
+                <!-- etc. -->
+            </head>
+            <body>
+                <p>" . $data->producto->detalle . "</p>
+                <img src=''>
+            </body>
+        </html>";
+        $this->render(false);
+    }
+    
+    public function getSocial() {
+        $SITE_ROOT = "http://proagrocorp.robertobocanegra.com/";
+
+        $jsonData = $this->getData($SITE_ROOT);
+        $this->makePage($jsonData, $SITE_ROOT);
     }
 }
