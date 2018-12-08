@@ -217,7 +217,7 @@ class ProductosController extends AppController
         $this->viewBuilder()->setLayout(false);
         echo "<!DOCTYPE html>
             <html>
-                <head>
+            <head>
                 <meta property='og:title' content='" . $data->producto->descripcion . "' />
                 <meta property='og:description' content='" . $data->producto->detalle . "' />
                 <meta property='og:image' content='" . $data->producto->imagen . "' />
