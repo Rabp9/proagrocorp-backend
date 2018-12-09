@@ -215,17 +215,29 @@ class ProductosController extends AppController
     
     private function makePage($data, $siteRoot) {
         $this->viewBuilder()->setLayout(false);
+        $size = 150;
+        $detalle = \Html2Text\Html2Text::convert($data->producto->detalle);
+        if (strlen($detalle) >= $size) {
+            $metaDescription = substr($detalle, 0, $size) . "...";
+        } else {
+            $metaDescription = $detalle;
+        }
         echo "<!DOCTYPE html>
             <html>
             <head>
-                <meta property='og:title' content='" . $data->producto->descripcion . "' />
-                <meta property='og:description' content='" . $data->producto->detalle . "' />
-                <meta property='og:image' content='" . $data->producto->imagen . "' />
-                <!-- etc. -->
+                <!-- Facebook -->
+                <meta property='og:title' content='" . $data->producto->descripcion . " | " . $data->producto->category->descripcion . "' />
+                <meta property='og:description' content='" . $metaDescription . "' />
+                <meta property='og:image' content='http://proagrocorp.robertobocanegra.com/api/img/productos/" . $data->producto->imagen . "' />
+                <meta property='og:type' content='website' />
+
+                <! Twitter ->
+                <meta name='twitter:card' content='summary' />
             </head>
             <body>
+                <h2>" . $data->producto->descripcion . "</h2>
                 <p>" . $data->producto->detalle . "</p>
-                <img src=''>
+                <img src='http://proagrocorp.robertobocanegra.com/api/img/productos/" . $data->producto->imagen . "'>
             </body>
         </html>";
         $this->render(false);

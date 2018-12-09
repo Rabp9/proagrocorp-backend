@@ -9,11 +9,6 @@
     RewriteRule    ^(\.well-known/.*)$ $1 [L]
     RewriteRule    ^$    webroot/    [L]
     RewriteRule    (.*) webroot/$1    [L]
-
-    # allow social media crawlers to work by redirecting them to a server-rendered static version on the page
-    RewriteCond %{HTTP_USER_AGENT} (facebookexternalhit/[0-9]|Twitterbot|Pinterest|Google.*snippet)
-    RewriteRule album/(\d*)$ http://proagrocorp.robertobocanegra.com/api/productos/getSocial?id=$1 [P]
-
 </IfModule>
 
 SetEnv CAKEPHP_DEBUG 1
