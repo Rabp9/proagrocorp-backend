@@ -188,4 +188,27 @@ class InfosController extends AppController
         $this->set(compact('message', 'code'));
         $this->set('_serialize', ['message', 'code']);
     }
+    
+    public function upload() { 
+        if ($this->request->is("post")) {
+            $imagen = $this->request->data["file"];
+            
+            $path_dst = WWW_ROOT . "img" . DS . "infos" . DS;
+            $ext = pathinfo($imagen['name'], PATHINFO_EXTENSION);
+            $filename = 'info-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filename_src = $imagen["tmp_name"];
+            $file_src = new File($filename_src);
+
+            if ($file_src->copy($path_dst . $filename)) {
+                $code = 200;
+                $message = 'La imagen fue subida correctamente';
+            } else {
+                $message = "La imagen no fue subida con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["message", "filename"]);
+        }
+    }
 }
