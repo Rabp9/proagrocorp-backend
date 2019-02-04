@@ -100,6 +100,10 @@ Router::scope('/', function ($routes) {
                 'action' => 'previewImagen',
                 'method' => 'POST'
             ],
+            'previewVideo' => [
+                'action' => 'previewVideo',
+                'method' => 'POST'
+            ],
             'send' => [
                 'action' => 'send',
                 'method' => 'POST'

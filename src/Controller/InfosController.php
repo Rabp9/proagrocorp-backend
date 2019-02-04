@@ -84,6 +84,16 @@ class InfosController extends AppController
                 $fileSrc->copy($pathDst . $info->valor);
             }
             
+            if ($info->tipo == 'vfile' && $info->changed == true) {
+                $pathSrc = WWW_ROOT . "tmp" . DS;
+                $fileSrc = new File($pathSrc . $info->valor);
+             
+                $pathDst = WWW_ROOT . 'mp4' . DS . 'infos' . DS;
+                $info->valor = $this->Random->randomFileName($pathDst, $info->descripcion . '-', $fileSrc->ext());
+                
+                $fileSrc->copy($pathDst . $info->valor);
+            }
+            
             if ($this->Infos->save($info)) {
                 $code = 200;
                 $message = 'La información fue guardada correctamente';
@@ -157,6 +167,28 @@ class InfosController extends AppController
                 $message = 'La imagen fue subida correctamente';
             } else {
                 $message = "La imagen no fue subida con éxito";
+            }
+            
+            $this->set(compact("code", "message", "filename"));
+            $this->set("_serialize", ["code", "message", "filename"]);
+        }
+    }
+    
+    public function previewVideo() {
+        if ($this->request->is("post")) {
+            $video = $this->request->data["file"];
+            
+            $pathDst = WWW_ROOT . "tmp" . DS;
+            $ext = pathinfo($video['name'], PATHINFO_EXTENSION);
+            $filename = 'video-' . $this->Random->randomString() . '.' . $ext;
+           
+            $filenameSrc = $video["tmp_name"];
+            $fileSrc = new File($filenameSrc);
+            if ($fileSrc->copy($pathDst . $filename)) {
+                $code = 200;
+                $message = 'El video fue subido correctamente';
+            } else {
+                $message = "El video no fue subido con éxito";
             }
             
             $this->set(compact("code", "message", "filename"));
