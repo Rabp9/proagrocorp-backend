@@ -16,7 +16,7 @@ class InfosController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['getMany', 'indexAdmin', 'send']);
+        $this->Auth->allow(['getMany', 'indexAdmin', 'send', 'prueba']);
     }
     
     /**
@@ -242,5 +242,14 @@ class InfosController extends AppController
             $this->set(compact("code", "message", "filename"));
             $this->set("_serialize", ["message", "filename"]);
         }
+    }
+    
+    public function prueba() {
+        $data = $this->request->getData();
+        
+        $respuesta = $data["montoTotalImpuestos"] + $data["totalVentaGravada"];
+        
+        $this->set(compact("respuesta"));
+        $this->set("_serialize", ["respuesta"]);
     }
 }
